@@ -5,12 +5,18 @@
 <script>
     //https://stackoverflow.com/questions/51748874/selected-tab-in-ionic-framework
     //https://stackoverflow.com/questions/52618181/ionic-4-nav-component-without-angular
-function startDonation(e) {
-    console.log("sdf");
-    debugger;
-    e.preventDefault();
-    this.select("gaps");
-}
+
+    function navGaps(e) {
+        e.preventDefault();
+        var tabs = document.getElementById("tabs-main");
+        tabs.select("gaps");
+    }
+    function navAllocations(e) {
+        e.preventDefault();
+        var tabs = document.getElementById("tabs-main");
+        tabs.select("allocations");
+    }
+
 </script>
 <link href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" rel="stylesheet">
 <style>
@@ -22,7 +28,7 @@ function startDonation(e) {
 </head>
 <body>
     <ion-app>
-        <ion-tabs>
+        <ion-tabs id="tabs-main">
             <ion-tab tab="info">
                 <ion-header translucent>
                     <ion-toolbar>
@@ -31,7 +37,6 @@ function startDonation(e) {
                 </ion-header>
                 <ion-content>
                     <form onsubmit="startDonation(event)">
-                        <!-- <form onsubmit="startDonation()"> -->
                         <ion-text>
                             <h2>Basic Information</h2>
                         </ion-text>
@@ -150,6 +155,7 @@ function startDonation(e) {
                 </ion-header>
                 <ion-content>
                     <h1>Test</h1>
+                    <ion-button size="large" id="continuebtn" onclick="navAllocations(event)">Continue</ion-button>
                 </ion-content>
             </ion-tab>
             <ion-tab tab="allocations">
