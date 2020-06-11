@@ -2,6 +2,16 @@
 <head>
 <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
 <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+<script>
+    //https://stackoverflow.com/questions/51748874/selected-tab-in-ionic-framework
+    //https://stackoverflow.com/questions/52618181/ionic-4-nav-component-without-angular
+function startDonation(e) {
+    console.log("sdf");
+    debugger;
+    e.preventDefault();
+    this.select("gaps");
+}
+</script>
 <link href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" rel="stylesheet">
 <style>
     :root {
@@ -11,119 +21,162 @@
   </style>
 </head>
 <body>
-    //https://ionicframework.com/docs/api/nav
     <ion-app>
-        <ion-content>
-            <h1>Fund Movement</h1>
+        <ion-tabs>
+            <ion-tab tab="info">
+                <ion-header translucent>
+                    <ion-toolbar>
+                    <ion-title><h1>Info</h1></ion-title>
+                    </ion-toolbar>
+                </ion-header>
+                <ion-content>
+                    <form onsubmit="startDonation(event)">
+                        <!-- <form onsubmit="startDonation()"> -->
+                        <ion-text>
+                            <h2>Basic Information</h2>
+                        </ion-text>
+                        <ion-item>
+                            <ion-label position="floating">Name</ion-label>
+                            <ion-input type="text" placeholder="John Doe" autocorrect="off" required="true"></ion-input>
+                        </ion-item>
+                        <ion-item>
+                            <ion-label position="floating">E-Mail</ion-label>
+                            <ion-input type="email" autocorrect="off" required="true"></ion-input>
+                        </ion-item>
+                        <ion-item>
+                            <ion-label position="floating">Donation</ion-label>
+                            <ion-input type="number" value="number" placeholder="$250" autocorrect="off" required="true"></ion-input>
+                        </ion-item>
+                        
+                        <ion-text>
+                            <h2>Choose Your Strategy</h2>
+                        </ion-text>
+                        <ion-grid>
+                            <ion-row>
+                                <ion-col>
+                                    <ion-item>
+                                        <ion-label>Co-governance</ion-label>
+                                        <!-- <ion-note>Ensuring communities have what they need to lead on the issues that matter to people’s lives year-round—from engaging voters in elections to building power to pass bold policies once elected officials are in office.</ion-note> -->
+                                        <ion-checkbox slot="start" name="cogovernance" checked></ion-checkbox>
+                                    </ion-item>
+                                </ion-col>
+                                <ion-col>
+                                    <ion-item>
+                                        <ion-label>Voter protection and education</ion-label>
+                                        <!-- <ion-note>Protecting voters and expanding access to the ballot to ensure that every person has a vote and that each vote is counted in the face of the ongoing efforts to purge and suppress voters—especially those from low income communities and communities of color.</ion-note> -->
+                                        <ion-checkbox slot="start" name="voterprotectionandeducation"></ion-checkbox>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+                            <ion-row>
+                                <ion-col>
+                                    <ion-item>
+                                        <ion-label>Narrative change</ion-label>
+                                        <!-- <ion-note>Building new narratives that are driven by the incredible leaders—most of them women and people of color—leading state-based and national work across the country.</ion-note> -->
+                                        <ion-checkbox slot="start" name="narrativechange"></ion-checkbox>
+                                    </ion-item>
+                                </ion-col>
+                                <ion-col>
+                                    <ion-item>
+                                        <ion-label>Sustainability</ion-label>
+                                        <!-- <ion-note>Acknowledging the unseen burdens of power building and allowing organizations to operate from a position of safety and strength.</ion-note> -->
+                                        <ion-checkbox slot="start" name="Sustainability"></ion-checkbox>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
 
-            <ion-text>
-                <h2>Basic Information</h2>
-            </ion-text>
-            <ion-item>
-                <ion-label position="floating">Name</ion-label>
-                <ion-input type="text" placeholder="John Doe" autocorrect="off" required="true"></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-label position="floating">E-Mail</ion-label>
-                <ion-input type="email" autocorrect="off" required="true"></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-label position="floating">Donation</ion-label>
-                <ion-input type="number" value="number" placeholder="$250" autocorrect="off" required="true"></ion-input>
-            </ion-item>
-              
-            <ion-text>
-                <h2>Choose Your Strategy</h2>
-            </ion-text>
-            <ion-grid>
-                <ion-row>
-                    <ion-col>
-                        <ion-item>
-                            <ion-label>Co-governance</ion-label>
-                            <!-- <ion-note>Ensuring communities have what they need to lead on the issues that matter to people’s lives year-round—from engaging voters in elections to building power to pass bold policies once elected officials are in office.</ion-note> -->
-                            <ion-checkbox slot="start" name="cogovernance" checked></ion-checkbox>
-                        </ion-item>
-                    </ion-col>
-                    <ion-col>
-                        <ion-item>
-                            <ion-label>Voter protection and education</ion-label>
-                            <!-- <ion-note>Protecting voters and expanding access to the ballot to ensure that every person has a vote and that each vote is counted in the face of the ongoing efforts to purge and suppress voters—especially those from low income communities and communities of color.</ion-note> -->
-                            <ion-checkbox slot="start" name="voterprotectionandeducation"></ion-checkbox>
-                        </ion-item>
-                    </ion-col>
-                </ion-row>
-                <ion-row>
-                    <ion-col>
-                        <ion-item>
-                            <ion-label>Narrative change</ion-label>
-                            <!-- <ion-note>Building new narratives that are driven by the incredible leaders—most of them women and people of color—leading state-based and national work across the country.</ion-note> -->
-                            <ion-checkbox slot="start" name="narrativechange"></ion-checkbox>
-                        </ion-item>
-                    </ion-col>
-                    <ion-col>
-                        <ion-item>
-                            <ion-label>Sustainability</ion-label>
-                            <!-- <ion-note>Acknowledging the unseen burdens of power building and allowing organizations to operate from a position of safety and strength.</ion-note> -->
-                            <ion-checkbox slot="start" name="Sustainability"></ion-checkbox>
-                        </ion-item>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
+                        <ion-list>
+                            <ion-list-header><h2>States</h2></ion-list-header>
+                            <ion-item>
+                                <ion-label>National</ion-label>
+                                <ion-checkbox name="ntl" value="ntl"></ion-checkbox>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label>Arizona</ion-label>
+                                <ion-checkbox slot="start" name="az" value="az"></ion-checkbox>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label>Colorado</ion-label>
+                                <ion-checkbox slot="start" name="co" value="co"></ion-checkbox>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label>Florida</ion-label>
+                                <ion-checkbox slot="start" name="fl" value="fl"></ion-checkbox>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label>Georgia</ion-label>
+                                <ion-checkbox slot="start" name="ga" value="ga"></ion-checkbox>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label>Michigan</ion-label>
+                                <ion-checkbox slot="start" name="mi" value="mi"></ion-checkbox>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label>Minnesota</ion-label>
+                                <ion-checkbox slot="start" name="mn" value="mn"></ion-checkbox>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label>North Carolina</ion-label>
+                                <ion-checkbox slot="start" name="nc" value="nc"></ion-checkbox>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label>Nevada</ion-label>
+                                <ion-checkbox slot="start" name="nv" value="nv"></ion-checkbox>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label>Pennsylvania</ion-label>
+                                <ion-checkbox slot="start" name="pa" value="pa"></ion-checkbox>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label>Texas</ion-label>
+                                <ion-checkbox slot="start" name="tx" value="tx"></ion-checkbox>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label>Virginia</ion-label>
+                                <ion-checkbox slot="start" name="va" value="va"></ion-checkbox>
+                            </ion-item>
+                        </ion-list>
 
-            <ion-list>
-                <ion-list-header><h2>States</h2></ion-list-header>
-                <ion-item>
-                    <ion-label>National</ion-label>
-                    <ion-checkbox slot="start" name="ntl" value="ntl"></ion-checkbox>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Arizona</ion-label>
-                    <ion-checkbox slot="start" name="az" value="az"></ion-checkbox>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Colorado</ion-label>
-                    <ion-checkbox slot="start" name="co" value="co"></ion-checkbox>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Florida</ion-label>
-                    <ion-checkbox slot="start" name="fl" value="fl"></ion-checkbox>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Georgia</ion-label>
-                    <ion-checkbox slot="start" name="ga" value="ga"></ion-checkbox>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Michigan</ion-label>
-                    <ion-checkbox slot="start" name="mi" value="mi"></ion-checkbox>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Minnesota</ion-label>
-                    <ion-checkbox slot="start" name="mn" value="mn"></ion-checkbox>
-                </ion-item>
-                <ion-item>
-                    <ion-label>North Carolina</ion-label>
-                    <ion-checkbox slot="start" name="nc" value="nc"></ion-checkbox>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Nevada</ion-label>
-                    <ion-checkbox slot="start" name="nv" value="nv"></ion-checkbox>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Pennsylvania</ion-label>
-                    <ion-checkbox slot="start" name="pa" value="pa"></ion-checkbox>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Texas</ion-label>
-                    <ion-checkbox slot="start" name="tx" value="tx"></ion-checkbox>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Virginia</ion-label>
-                    <ion-checkbox slot="start" name="va" value="va"></ion-checkbox>
-                </ion-item>
-            </ion-list>
-
-            <ion-button size="large">Continue</ion-button>
-        </ion-content>
+                        <ion-button type="submit" size="large" id="continuebtn">Continue</ion-button>
+                    </form>
+                </ion-content>
+            </ion-tab>
+            <ion-tab tab="gaps">
+                <ion-header translucent>
+                    <ion-toolbar>
+                    <ion-title><h1>Donation Gaps</h1></ion-title>
+                    </ion-toolbar>
+                </ion-header>
+                <ion-content>
+                    <h1>Test</h1>
+                </ion-content>
+            </ion-tab>
+            <ion-tab tab="allocations">
+                <ion-header translucent>
+                    <ion-toolbar>
+                    <ion-title><h1>Allocations</h1></ion-title>
+                    </ion-toolbar>
+                </ion-header>
+                <ion-content>
+                    <h1>Test</h1>
+                </ion-content>
+            </ion-tab>
+            <ion-tab-bar slot="bottom">
+            <ion-tab-button tab="info">
+              <ion-label>Info</ion-label>
+              <ion-icon name="person-outline"></ion-icon>
+            </ion-tab-button>
+            <ion-tab-button tab="gaps">
+              <ion-label>Donation Gaps</ion-label>
+              <ion-icon name="bar-chart-outline"></ion-icon>
+            </ion-tab-button>
+            <ion-tab-button tab="allocations">
+              <ion-label>Allocations</ion-label>
+              <ion-icon name="options-outline"></ion-icon>
+            </ion-tab-button>
+          </ion-tab-bar>
+        </ion-tabs>
     </ion-app>
 </body>
 </html>
