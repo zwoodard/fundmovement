@@ -2,9 +2,26 @@
 <head>
 <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
 <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<link href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" rel="stylesheet">
+
+<script src="/papaparse.min.js"></script>
+<script src="/progressbar.min.js"></script>
+<script src="/gaps.js"></script>
+
 <script>
-    //https://stackoverflow.com/questions/51748874/selected-tab-in-ionic-framework
-    //https://stackoverflow.com/questions/52618181/ionic-4-nav-component-without-angular
+    (function () {
+        window.onload = function() {
+            stateGaps.loadData();
+
+            document.getElementById("tabs-main").addEventListener("ionTabsDidChange", function(e) {
+                if (e.detail.tab == "gaps")
+                {
+                    stateGaps.draw();
+                }
+            });
+        };
+    })();
 
     function navGaps(e) {
         e.preventDefault();
@@ -16,15 +33,14 @@
         var tabs = document.getElementById("tabs-main");
         tabs.select("allocations");
     }
-
 </script>
-<link href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" rel="stylesheet">
+
 <style>
     :root {
       --ion-safe-area-top: 20px;
       --ion-safe-area-bottom: 22px;
     }
-  </style>
+</style>
 </head>
 <body>
     <ion-app>
@@ -155,6 +171,7 @@
                 </ion-header>
                 <ion-content>
                     <h1>Test</h1>
+                    <div id="gapcontainer"></div>
                     <ion-button size="large" id="continuebtn" onclick="navAllocations(event)">Continue</ion-button>
                 </ion-content>
             </ion-tab>
@@ -185,4 +202,7 @@
         </ion-tabs>
     </ion-app>
 </body>
+<template id="stateGapTemplate">
+    <div >
+</templte>
 </html>
