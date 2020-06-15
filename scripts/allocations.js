@@ -1,5 +1,5 @@
 var allocations = (function() {
-    var csvUrl = "/org_data.csv";
+    var csvUrl = "data/org_data.csv";
     var orgData = [];
 
 

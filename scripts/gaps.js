@@ -1,5 +1,5 @@
 var stateGaps = (function(){
-    var csvUrl = "/state_gap_data.csv";
+    var csvUrl = "data/state_gap_data.csv";
     var gapData = []
     var loadData = function() {
         if(gapData.length == 0) {
