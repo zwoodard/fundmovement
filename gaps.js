@@ -1,10 +1,9 @@
 var stateGaps = (function(){
-    
+    var csvUrl = "/state_gap_data.csv";
     var gapData = []
     var loadData = function() {
         if(gapData.length == 0) {
-            var dataUrl = "/c3_data.csv";
-            Papa.parse(dataUrl, {
+            Papa.parse(csvUrl, {
                 download: true,
                 header: true,
                 complete: function(data) {

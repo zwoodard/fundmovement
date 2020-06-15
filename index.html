@@ -8,16 +8,21 @@
 <script src="/papaparse.min.js"></script>
 <script src="/progressbar.min.js"></script>
 <script src="/gaps.js"></script>
+<script src="/allocations.js"></script>
 
 <script>
     (function () {
         window.onload = function() {
             stateGaps.loadData();
+            allocations.loadData();
 
             document.getElementById("tabs-main").addEventListener("ionTabsDidChange", function(e) {
                 if (e.detail.tab == "gaps")
                 {
                     stateGaps.draw();
+                }
+                else if (e.detail.tab == "allocations") {
+                    allocations.draw();
                 }
             });
         };
@@ -40,6 +45,9 @@
       --ion-safe-area-top: 20px;
       --ion-safe-area-bottom: 22px;
     }
+    .currency:before {
+        content: "$";
+    }
 </style>
 </head>
 <body>
@@ -57,16 +65,16 @@
                             <h2>Basic Information</h2>
                         </ion-text>
                         <ion-item>
-                            <ion-label position="floating">Name</ion-label>
-                            <ion-input type="text" placeholder="John Doe" autocorrect="off" required="true"></ion-input>
+                            <ion-label position="stacked">Name</ion-label>
+                            <ion-input id="name" type="text" placeholder="John Doe" autocorrect="off" required="true"></ion-input>
                         </ion-item>
                         <ion-item>
-                            <ion-label position="floating">E-Mail</ion-label>
-                            <ion-input type="email" autocorrect="off" required="true"></ion-input>
+                            <ion-label position="stacked">E-Mail</ion-label>
+                            <ion-input id="email" type="email" placeholder="john.doe@example.com" autocorrect="off" required="true"></ion-input>
                         </ion-item>
                         <ion-item>
-                            <ion-label position="floating">Donation</ion-label>
-                            <ion-input type="number" value="number" placeholder="$250" autocorrect="off" required="true"></ion-input>
+                            <ion-label position="stacked">Donation</ion-label>
+                            <ion-input id="donationAmount" class="currency" type="number" placeholder="250" autocorrect="off" required="true"></ion-input>
                         </ion-item>
                         
                         <ion-text>
@@ -78,14 +86,14 @@
                                     <ion-item>
                                         <ion-label>Co-governance</ion-label>
                                         <!-- <ion-note>Ensuring communities have what they need to lead on the issues that matter to people’s lives year-round—from engaging voters in elections to building power to pass bold policies once elected officials are in office.</ion-note> -->
-                                        <ion-checkbox slot="start" name="cogovernance" checked></ion-checkbox>
+                                        <ion-checkbox slot="start" name="cogovernance" id="cogovernance" checked></ion-checkbox>
                                     </ion-item>
                                 </ion-col>
                                 <ion-col>
                                     <ion-item>
                                         <ion-label>Voter protection and education</ion-label>
                                         <!-- <ion-note>Protecting voters and expanding access to the ballot to ensure that every person has a vote and that each vote is counted in the face of the ongoing efforts to purge and suppress voters—especially those from low income communities and communities of color.</ion-note> -->
-                                        <ion-checkbox slot="start" name="voterprotectionandeducation"></ion-checkbox>
+                                        <ion-checkbox slot="start" name="voterprotectionandeducation" id="voterprotectionandeducation" checked></ion-checkbox>
                                     </ion-item>
                                 </ion-col>
                             </ion-row>
@@ -94,14 +102,14 @@
                                     <ion-item>
                                         <ion-label>Narrative change</ion-label>
                                         <!-- <ion-note>Building new narratives that are driven by the incredible leaders—most of them women and people of color—leading state-based and national work across the country.</ion-note> -->
-                                        <ion-checkbox slot="start" name="narrativechange"></ion-checkbox>
+                                        <ion-checkbox slot="start" name="narrativechange" id="narrativechange" checked></ion-checkbox>
                                     </ion-item>
                                 </ion-col>
                                 <ion-col>
                                     <ion-item>
                                         <ion-label>Sustainability</ion-label>
                                         <!-- <ion-note>Acknowledging the unseen burdens of power building and allowing organizations to operate from a position of safety and strength.</ion-note> -->
-                                        <ion-checkbox slot="start" name="Sustainability"></ion-checkbox>
+                                        <ion-checkbox slot="start" name="sustainability" id="sustainability" checked></ion-checkbox>
                                     </ion-item>
                                 </ion-col>
                             </ion-row>
@@ -115,7 +123,7 @@
                             </ion-item>
                             <ion-item>
                                 <ion-label>Arizona</ion-label>
-                                <ion-checkbox slot="start" name="az" value="az"></ion-checkbox>
+                                <ion-checkbox checked slot="start" name="az" value="az"></ion-checkbox>
                             </ion-item>
                             <ion-item>
                                 <ion-label>Colorado</ion-label>
@@ -182,7 +190,8 @@
                     </ion-toolbar>
                 </ion-header>
                 <ion-content>
-                    <h1>Test</h1>
+                    <h1>Adjust Donations</h1>
+                    <ion-list id="allocationsContainer"></ion-list>
                 </ion-content>
             </ion-tab>
             <ion-tab-bar slot="bottom">
