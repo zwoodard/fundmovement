@@ -72,7 +72,19 @@ var allocations = (function() {
         return orgAllocations;
     }
 
+    var calculateTotal = function() {
+        var total = 0.0;
+        for(var ele of document.querySelectorAll(".finalDonationAllocation")) {
+            total += Number(ele.value);
+        }
+        return total;
+    }
+    
+    var needsRedraw = true;
     var draw = function() {
+        if(!needsRedraw)
+            return;
+        needsRedraw = false;
         //Clear any existing content, happens when we redraw page. E.g. user goes back to info and changes their states
         var container = document.getElementById("allocationsContainer");
         container.innerHTML = "";
@@ -88,23 +100,37 @@ var allocations = (function() {
 
             orgAllocationItem.innerHTML = `
                 <ion-label position="stacked">${orgAllocation.orgName}</ion-label>
-                <ion-input type="number" class="currency" value="${orgAllocation.allocation.toFixed(2)}"></ion-input>
+                <ion-input type="number" class="currency finalDonationAllocation" value="${orgAllocation.allocation.toFixed(2)}"></ion-input>
             `;
 
             container.appendChild(orgAllocationItem);
         }
 
-        console.log(total);
         var totalItem = document.createElement("ion-item");
         totalItem.innerHTML = `
             <ion-label position="stacked">Total</ion-label>
-            <ion-input type="number" class="currency" value="${total.toFixed(2)}"></ion-input>
+            <ion-input readonly id="totalDonation" type="number" class="currency" value="${total.toFixed(2)}"></ion-input>
         `;
         container.appendChild(totalItem);
+
+        
+        for(var ele of document.querySelectorAll(".finalDonationAllocation")) {
+            ele.addEventListener("change", function() {
+                console.log("Changed donation");
+                document.getElementById("totalDonation").value = calculateTotal().toFixed(2);
+            });
+        }
     }
+
+    var redraw = function() {
+        console.log("Triggering redraw, was " + needsRedraw)
+        needsRedraw = true;
+    }
+
 
     return {
         loadData: loadData,
         draw: draw,
+        redraw: redraw
     }
 })();

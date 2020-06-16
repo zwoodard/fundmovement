@@ -25,6 +25,9 @@
                     allocations.draw();
                 }
             });
+
+            document.getElementById("donationAmount").addEventListener("change", (e) => allocations.redraw());
+
         };
     })();
 
