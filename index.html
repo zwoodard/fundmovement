@@ -47,6 +47,8 @@
     :root {
       --ion-safe-area-top: 20px;
       --ion-safe-area-bottom: 22px;
+      --ion-safe-area-right: 20px;
+      --ion-safe-area-left: 20px;
     }
     .currency:before {
         content: "$";
@@ -57,34 +59,38 @@
     <ion-app>
         <ion-tabs id="tabs-main">
             <ion-tab tab="info">
-                <ion-header translucent>
-                    <ion-toolbar>
-                    <ion-title><h1>Info</h1></ion-title>
+                <ion-header>
+                    <ion-toolbar color="primary">
+                    <ion-title>
+                        <h1>Info</h1>
+                    </ion-title>
                     </ion-toolbar>
                 </ion-header>
                 <ion-content>
                     <form onsubmit="navGaps(event)">
-                        <ion-text>
-                            <h2>Basic Information</h2>
-                        </ion-text>
-                        <ion-item>
-                            <ion-label position="stacked">Name</ion-label>
-                            <ion-input id="name" type="text" placeholder="John Doe" autocorrect="off" required="true"></ion-input>
-                        </ion-item>
-                        <ion-item>
-                            <ion-label position="stacked">E-Mail</ion-label>
-                            <ion-input id="email" type="email" placeholder="john.doe@example.com" autocorrect="off" required="true"></ion-input>
-                        </ion-item>
-                        <ion-item>
-                            <ion-label position="stacked">Donation</ion-label>
-                            <ion-input id="donationAmount" class="currency" type="number" placeholder="250" autocorrect="off" required="true"></ion-input>
-                        </ion-item>
+                        <ion-item-divider color="Tertiary">
+                                <h2>Basic Information</h2>
+                        </ion-item-divider>
+                        <!-- <ion-text>
+                        </ion-text> -->
+                        <ion-item-group>
+                            <ion-item>
+                                <ion-label position="stacked">Name</ion-label>
+                                <ion-input id="name" type="text" placeholder="John Doe" autocorrect="off" required="true"></ion-input>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="stacked">E-Mail</ion-label>
+                                <ion-input id="email" type="email" placeholder="john.doe@example.com" autocorrect="off" required="true"></ion-input>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="stacked">Donation</ion-label>
+                                <ion-input id="donationAmount" class="currency" type="number" placeholder="250" autocorrect="off" required="true"></ion-input>
+                            </ion-item>
+                        </ion-item-group>
                         
-                        <ion-text>
+                        <ion-item-divider color="Tertiary">
                             <h2>Choose Your Strategy</h2>
-                        </ion-text>
-
-                        
+                        </ion-item-divider>
                         <ion-grid>
                             <ion-row>
                                 <ion-col>
@@ -143,10 +149,12 @@
                         </ion-grid>
 
                         <ion-list>
-                            <ion-list-header><h2>States</h2></ion-list-header>
+                            <ion-item-divider color="Tertiary">
+                                <h2>Choose Your States</h2>
+                            </ion-item-divider>
                             <ion-item>
                                 <ion-label>National</ion-label>
-                                <ion-checkbox name="ntl" value="ntl"></ion-checkbox>
+                                <ion-checkbox name="ntl" slot="start" value="ntl"></ion-checkbox>
                             </ion-item>
                             <ion-item>
                                 <ion-label>Arizona</ion-label>
@@ -200,19 +208,18 @@
             </ion-tab>
             <ion-tab tab="gaps">
                 <ion-header translucent>
-                    <ion-toolbar>
+                    <ion-toolbar color="primary">
                     <ion-title><h1>Donation Gaps</h1></ion-title>
                     </ion-toolbar>
                 </ion-header>
                 <ion-content>
-                    <h1>Test</h1>
                     <div id="gapcontainer"></div>
                     <ion-button size="large" id="continuebtn" onclick="navAllocations(event)">Continue</ion-button>
                 </ion-content>
             </ion-tab>
             <ion-tab tab="allocations">
                 <ion-header translucent>
-                    <ion-toolbar>
+                    <ion-toolbar color="primary">
                     <ion-title><h1>Allocations</h1></ion-title>
                     </ion-toolbar>
                 </ion-header>
