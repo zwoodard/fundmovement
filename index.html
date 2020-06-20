@@ -9,6 +9,7 @@
 <script src="scripts/lib/progressbar.min.js"></script>
 <script src="scripts/gaps.js"></script>
 <script src="scripts/allocations.js"></script>
+<script src="scripts/config.js"></script>
 
 <script>
     (function () {
@@ -16,7 +17,9 @@
             stateGaps.loadData();
             allocations.loadData();
 
+            var currentTab;
             document.getElementById("tabs-main").addEventListener("ionTabsDidChange", function(e) {
+                currentTab = e.detail.tab;
                 if (e.detail.tab == "gaps")
                 {
                     stateGaps.draw();
@@ -26,16 +29,76 @@
                 }
             });
 
-            document.getElementById("donationAmount").addEventListener("change", (e) => allocations.redraw());
+            // document.getElementById("statesSelectList").addEventListener("ionChange", function(e) {
+            //     var hasCheckedState = Array.from(document.getElementsByName("state")).some(e => e.checked);
+            //     if(!hasCheckedState) {
+                    
+            //         // dataAlert("Invalid selection", "Please select 1 or more states.");
+            //         // e.stopImmediatePropagation();
+            //         // e.preventDefault();
+            //         return;
+            //     }
+            // });
+
+            document.getElementById("tabs-main").addEventListener("ionTabsWillChange", function(e) {
+                if (currentTab == "info" && e.detail.tab != "info") {
+                    //Navigating away from Info tab
+                    debugger;
+                    var hasCheckedState = Array.from(document.getElementsByName("state")).some(e => e.checked);
+                    if(!hasCheckedState) {
+                        dataAlert("Invalid selection", "Please select 1 or more states.");
+                        e.stopImmediatePropagation();
+                        e.preventDefault();
+                        return;
+                    }
+
+                    var hasCheckedStrategy = Array.from(document.getElementsByName("strategy")).some(e => e.checked);
+                    if(!hasCheckedStrategy) {
+                        dataAlert("Invalid selection", "Please select 1 or more strategies.");
+                        e.stopImmediatePropagation();
+                        e.preventDefault();
+                        return;
+                    }
+                }
+            });
+
+            document.getElementById("donationAmount").addEventListener("change", function(e) {
+                //Requirement: Donations >$100K must contact first
+                var newValue = Number(e.srcElement.value)
+                if(newValue > config.max_donation_amount)
+                {
+                    e.srcElement.value = e.defaultValue;
+                    e.srcElement.focus();
+                    dataAlert("Amount too large", config.max_donation_message);
+                }
+                else if (newValue < config.min_donation_amount)
+                {
+                    e.srcElement.value = e.defaultValue;
+                    e.srcElement.focus();
+                    dataAlert("Amount too small", config.min_donation_message);
+                }
+                allocations.redraw();
+            });
 
         };
     })();
 
+    function dataAlert(title, message) {
+        const alert = document.createElement('ion-alert');
+        alert.header = title;
+        alert.message = message;
+        alert.buttons = ['Ok'];
+        document.body.appendChild(alert);
+        return alert.present();
+    }
+
     function navGaps(e) {
         e.preventDefault();
+        
         var tabs = document.getElementById("tabs-main");
         tabs.select("gaps");
     }
+    
     function navAllocations(e) {
         e.preventDefault();
         var tabs = document.getElementById("tabs-main");
@@ -103,7 +166,7 @@
                                                 once elected officials are in office.
                                             </ion-note>
                                         </ion-label>
-                                        <ion-checkbox slot="start" name="cogovernance" id="cogovernance" checked></ion-checkbox>
+                                        <ion-checkbox slot="start" name="strategy" id="cogovernance" checked></ion-checkbox>
                                     </ion-item>
                                 </ion-col>
                                 <ion-col>
@@ -116,7 +179,7 @@
                                                 especially those from low income communities and communities of color.
                                             </ion-note>
                                         </ion-label>
-                                        <ion-checkbox slot="start" name="voterprotectionandeducation" id="voterprotectionandeducation" checked></ion-checkbox>
+                                        <ion-checkbox slot="start" name="strategy" id="voterprotectionandeducation" checked></ion-checkbox>
                                     </ion-item>
                                 </ion-col>
                             </ion-row>
@@ -130,7 +193,7 @@
                                                 people of color &mdash; leading state-based and national work across the country.
                                             </ion-note>
                                         </ion-label>
-                                        <ion-checkbox slot="start" name="narrativechange" id="narrativechange" checked></ion-checkbox>
+                                        <ion-checkbox slot="start" name="strategy" id="narrativechange" checked></ion-checkbox>
                                     </ion-item>
                                 </ion-col>
                                 <ion-col>
@@ -142,63 +205,63 @@
                                                 position of safety and strength.
                                             </ion-note>
                                         </ion-label>
-                                        <ion-checkbox slot="start" name="sustainability" id="sustainability" checked></ion-checkbox>
+                                        <ion-checkbox slot="start" name="strategy" id="sustainability" checked></ion-checkbox>
                                     </ion-item>
                                 </ion-col>
                             </ion-row>
                         </ion-grid>
 
-                        <ion-list>
+                        <ion-list id="statesSelectList">
                             <ion-item-divider color="Tertiary">
                                 <h2>Choose Your States</h2>
                             </ion-item-divider>
                             <ion-item>
                                 <ion-label>National</ion-label>
-                                <ion-checkbox name="ntl" slot="start" value="ntl"></ion-checkbox>
+                                <ion-checkbox name="state" slot="start" value="ntl"></ion-checkbox>
                             </ion-item>
                             <ion-item>
                                 <ion-label>Arizona</ion-label>
-                                <ion-checkbox checked slot="start" name="az" value="az"></ion-checkbox>
+                                <ion-checkbox checked slot="start" name="state" value="az"></ion-checkbox>
                             </ion-item>
                             <ion-item>
                                 <ion-label>Colorado</ion-label>
-                                <ion-checkbox slot="start" name="co" value="co"></ion-checkbox>
+                                <ion-checkbox slot="start" name="state" value="co"></ion-checkbox>
                             </ion-item>
                             <ion-item>
                                 <ion-label>Florida</ion-label>
-                                <ion-checkbox slot="start" name="fl" value="fl"></ion-checkbox>
+                                <ion-checkbox slot="start" name="state" value="fl"></ion-checkbox>
                             </ion-item>
                             <ion-item>
                                 <ion-label>Georgia</ion-label>
-                                <ion-checkbox slot="start" name="ga" value="ga"></ion-checkbox>
+                                <ion-checkbox slot="start" name="state" value="ga"></ion-checkbox>
                             </ion-item>
                             <ion-item>
                                 <ion-label>Michigan</ion-label>
-                                <ion-checkbox slot="start" name="mi" value="mi"></ion-checkbox>
+                                <ion-checkbox slot="start" name="state" value="mi"></ion-checkbox>
                             </ion-item>
                             <ion-item>
                                 <ion-label>Minnesota</ion-label>
-                                <ion-checkbox slot="start" name="mn" value="mn"></ion-checkbox>
+                                <ion-checkbox slot="start" name="state" value="mn"></ion-checkbox>
                             </ion-item>
                             <ion-item>
                                 <ion-label>North Carolina</ion-label>
-                                <ion-checkbox slot="start" name="nc" value="nc"></ion-checkbox>
+                                <ion-checkbox slot="start" name="state" value="nc"></ion-checkbox>
                             </ion-item>
                             <ion-item>
                                 <ion-label>Nevada</ion-label>
-                                <ion-checkbox slot="start" name="nv" value="nv"></ion-checkbox>
+                                <ion-checkbox slot="start" name="state" value="nv"></ion-checkbox>
                             </ion-item>
                             <ion-item>
                                 <ion-label>Pennsylvania</ion-label>
-                                <ion-checkbox slot="start" name="pa" value="pa"></ion-checkbox>
+                                <ion-checkbox slot="start" name="state" value="pa"></ion-checkbox>
                             </ion-item>
                             <ion-item>
                                 <ion-label>Texas</ion-label>
-                                <ion-checkbox slot="start" name="tx" value="tx"></ion-checkbox>
+                                <ion-checkbox slot="start" name="state" value="tx"></ion-checkbox>
                             </ion-item>
                             <ion-item>
                                 <ion-label>Virginia</ion-label>
-                                <ion-checkbox slot="start" name="va" value="va"></ion-checkbox>
+                                <ion-checkbox slot="start" name="state" value="va"></ion-checkbox>
                             </ion-item>
                         </ion-list>
 
