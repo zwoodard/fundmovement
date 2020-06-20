@@ -29,21 +29,9 @@
                 }
             });
 
-            // document.getElementById("statesSelectList").addEventListener("ionChange", function(e) {
-            //     var hasCheckedState = Array.from(document.getElementsByName("state")).some(e => e.checked);
-            //     if(!hasCheckedState) {
-                    
-            //         // dataAlert("Invalid selection", "Please select 1 or more states.");
-            //         // e.stopImmediatePropagation();
-            //         // e.preventDefault();
-            //         return;
-            //     }
-            // });
-
             document.getElementById("tabs-main").addEventListener("ionTabsWillChange", function(e) {
                 if (currentTab == "info" && e.detail.tab != "info") {
                     //Navigating away from Info tab
-                    debugger;
                     var hasCheckedState = Array.from(document.getElementsByName("state")).some(e => e.checked);
                     if(!hasCheckedState) {
                         dataAlert("Invalid selection", "Please select 1 or more states.");
@@ -115,6 +103,13 @@
     }
     .currency:before {
         content: "$";
+    }
+
+    #gapcontainer {
+        --ion-grid-width-xs:              100%;
+        --ion-grid-width-md:              720px;
+        --ion-grid-width-lg:              40%;
+        --ion-grid-width-xl:              40%;
     }
 </style>
 </head>
@@ -276,7 +271,7 @@
                     </ion-toolbar>
                 </ion-header>
                 <ion-content>
-                    <div id="gapcontainer"></div>
+                    <ion-grid fixed id="gapcontainer"></ion-grid>
                     <ion-button size="large" id="continuebtn" onclick="navAllocations(event)">Continue</ion-button>
                 </ion-content>
             </ion-tab>

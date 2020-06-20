@@ -24,8 +24,6 @@ var stateGaps = (function(){
         }
     }
 
-
-
     var currencyFormatter =  new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -35,40 +33,44 @@ var stateGaps = (function(){
     });
     var addProgressBar = function(data) {
         var stateProgressId = "stategap_" + data.state;
-        var stateProgress = document.getElementById(stateProgressId);
+        var stateProgressRow = document.getElementById(stateProgressId);
         //Create state div + progress bar if not exists
-        if(!stateProgress) {
-            stateProgress = document.createElement("div");
-            stateProgress.setAttribute("state", data.state);
-            stateProgress.setAttribute("id", stateProgressId);
-            stateProgress.innerHTML = `<h2>${data.state}</h2>`;
-            document.getElementById("gapcontainer").appendChild(stateProgress);
+        if(!stateProgressRow) {
+            var stateProgressColId = stateProgressId + "_col";
+            stateProgressRow = document.createElement("ion-row");
+            // stateProgressRow.setAttribute("state", data.state);
+            stateProgressRow.setAttribute("id", stateProgressId);
+            stateProgressRow.innerHTML = `
+            <ion-col id="${stateProgressColId}">
+            <ion-text><h2>${data.state}<h2></ion-text>
+            </ion-col>
+            `;
+
+            document.getElementById("gapcontainer").appendChild(stateProgressRow);
 
             var startColor = '#FC5B3F';
             var endColor = '#6FD57F';
-            var line = new ProgressBar.Line("#" + stateProgressId, {
+            var line = new ProgressBar.Line("#" + stateProgressColId, {
                 color: startColor,
-                // color: '#5EEB5B',
                 strokeWidth: 1.5,
                 trailColor: '#eee',
                 trailWidth: 0.8,
                 duration: 500,
                 easing: 'easeOut',
                 text: {
-                    value: currencyFormatter.format(data.raised) + " / " + currencyFormatter.format(data.budget),
-                    // value: data.state + ": $" + data.raised + "/" + "$" + data.budget,
+                    value: `
+                        <ion-text class="ion-float-left">
+                            ${currencyFormatter.format(data.raised)}
+                        </ion-text>
+                        <ion-text class="ion-float-right">
+                            ${currencyFormatter.format(data.gap)}
+                        </ion-text>
+                    `,
                     className: 'statename',
                     style: {
-                        // Text color.
-                        // Default: same as stroke color (options.color)
                         color: '#f00'
                     },
                 },
-                // See #custom-animations section
-                // Built-in shape passes reference to itself and a custom attachment
-                // object to step function
-                // from: { color: '#000' },
-                // to: { color: '#5EEB5B' },
                 step: function(state, line, attachment) {
                     line.path.setAttribute('stroke', state.color);
                 },

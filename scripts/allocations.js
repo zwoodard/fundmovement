@@ -39,9 +39,9 @@ var allocations = (function() {
 
     function determineAllocations() {
         var strategies = ["cogovernance", "voterprotectionandeducation", "narrativechange", "sustainability"];
-        var states = ["ntl", "az", "co", "fl", "ga", "mi", "mn", "nc", "nv", "pa", "tx", "va"];
         var selectedStrategies = strategies.filter(strat => document.getElementById(strat).checked);
-        var selectedStates = states.filter(state => document.querySelector(`ion-checkbox[name='${state}']`).checked);
+        var selectedStates = Array.from(document.querySelectorAll(`ion-checkbox[name='state']`))
+            .filter(checkbox => checkbox.checked).map(checkbox => checkbox.value);
 
         var fitsStrategy = {
             "cogovernance" : org => org.governance || org.boldPolicies,
