@@ -7,14 +7,14 @@
 
 <script src="scripts/lib/papaparse.min.js"></script>
 <script src="scripts/lib/progressbar.min.js"></script>
-<script src="scripts/gaps.js"></script>
+<script src="scripts/states.js"></script>
 <script src="scripts/allocations.js"></script>
 <script src="scripts/config.js"></script>
 
 <script>
     (function () {
         window.onload = function() {
-            stateGaps.loadData();
+            states.load();
             allocations.loadData();
 
             var currentTab;
@@ -22,7 +22,7 @@
                 currentTab = e.detail.tab;
                 if (e.detail.tab == "gaps")
                 {
-                    stateGaps.draw();
+                    states.draw();
                 }
                 else if (e.detail.tab == "allocations") {
                     allocations.draw();
@@ -79,13 +79,6 @@
         document.body.appendChild(alert);
         return alert.present();
     }
-
-    function navGaps(e) {
-        e.preventDefault();
-        
-        var tabs = document.getElementById("tabs-main");
-        tabs.select("gaps");
-    }
     
     function navAllocations(e) {
         e.preventDefault();
@@ -96,13 +89,70 @@
 
 <style>
     :root {
-      --ion-safe-area-top: 20px;
-      --ion-safe-area-bottom: 22px;
-      --ion-safe-area-right: 20px;
-      --ion-safe-area-left: 20px;
+        --ion-padding: 800px;
+        --ion-safe-area-top: 20px;
+        --ion-safe-area-bottom: 22px;
+        --ion-safe-area-right: 20px;
+        --ion-safe-area-left: 20px;
+
+
+
+        --ion-background-color: #381d50;
+        --ion-background-color-rgb: 56,29,80;
+
+        --ion-text-color: #ffffff;
+        --ion-text-color-rgb: 255,255,255;
+
+        --ion-color-step-50: #422859;
+        --ion-color-step-100: #4c3462;
+        --ion-color-step-150: #563f6a;
+        --ion-color-step-200: #604a73;
+        --ion-color-step-250: #6a567c;
+        --ion-color-step-300: #746185;
+        --ion-color-step-350: #7e6c8d;
+        --ion-color-step-400: #887796;
+        --ion-color-step-450: #92839f;
+        --ion-color-step-500: #9c8ea8;
+        --ion-color-step-550: #a599b0;
+        --ion-color-step-600: #afa5b9;
+        --ion-color-step-650: #b9b0c2;
+        --ion-color-step-700: #c3bbcb;
+        --ion-color-step-750: #cdc7d3;
+        --ion-color-step-800: #d7d2dc;
+        --ion-color-step-850: #e1dde5;
+        --ion-color-step-900: #ebe8ee;
+        --ion-color-step-950: #f5f4f6;
+        
+
+        /* --ion-color-primary: #381d50;
+        --ion-color-primary-rgb: 56,29,80;
+        --ion-color-primary-contrast: #ffffff;
+        --ion-color-primary-contrast-rgb: 255,255,255;
+        --ion-color-primary-shade: #301846;
+        --ion-color-primary-tint: #562f79; */
+
+        --ion-color-primary: #c82659;
+        --ion-color-primary-rgb: 200,38, 89;
+        --ion-color-primary-contrast: #ffffff;
+        --ion-color-primary-contrast-rgb: 255,255,255;
+        --ion-color-primary-shade: #96153e;
+        --ion-color-primary-tint: #eb4c7e;
+
+        
     }
+
+    h1,h2 {
+        color: var(--ion-color-primary);
+    }
+
     .currency:before {
         content: "$";
+    }
+
+    ion-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     #gapcontainer {
@@ -111,50 +161,86 @@
         --ion-grid-width-lg:              40%;
         --ion-grid-width-xl:              40%;
     }
+
+    #info-main-grid {
+        --ion-grid-width-xs:              100%;
+        --ion-grid-width-sm:              95%;
+        --ion-grid-width-md:              90%;
+        --ion-grid-width-lg:              80%;
+        --ion-grid-width-xl:              70%;
+    }
+
+    .strategy-name {
+        font-weight: bold;
+    }
 </style>
 </head>
 <body>
     <ion-app>
         <ion-tabs id="tabs-main">
             <ion-tab tab="info">
-                <ion-header>
-                    <ion-toolbar color="primary">
-                    <ion-title>
-                        <h1>Info</h1>
-                    </ion-title>
-                    </ion-toolbar>
-                </ion-header>
-                <ion-content>
-                    <form onsubmit="navGaps(event)">
-                        <ion-item-divider color="Tertiary">
-                                <h2>Basic Information</h2>
-                        </ion-item-divider>
-                        <!-- <ion-text>
-                        </ion-text> -->
-                        <ion-item-group>
-                            <ion-item>
-                                <ion-label position="stacked">Name</ion-label>
-                                <ion-input id="name" type="text" placeholder="John Doe" autocorrect="off" required="true"></ion-input>
-                            </ion-item>
-                            <ion-item>
-                                <ion-label position="stacked">E-Mail</ion-label>
-                                <ion-input id="email" type="email" placeholder="john.doe@example.com" autocorrect="off" required="true"></ion-input>
-                            </ion-item>
-                            <ion-item>
-                                <ion-label position="stacked">Donation</ion-label>
-                                <ion-input id="donationAmount" class="currency" type="number" placeholder="250" autocorrect="off" required="true"></ion-input>
-                            </ion-item>
-                        </ion-item-group>
-                        
-                        <ion-item-divider color="Tertiary">
-                            <h2>Choose Your Strategy</h2>
-                        </ion-item-divider>
-                        <ion-grid>
+                <ion-content class="ion-justify-content-center">
+                    <ion-grid fixed id="info-main-grid">
+                        <ion-row>
+                            <ion-col>
+                                <ion-text>
+                                    <h3>
+                                        Way to win is tracking comprehensive programs and budgets and budget gaps for over one hundred groups
+                                        across eleven state and nationally. This tool can help you prioritize your giving interest and recommendations.
+                                    </h3>
+                                </ion-text>
+                            </ion-col>
+                        </ion-row>
+
+                        <ion-row>
+                            <ion-col>
+                                <ion-item-divider>
+                                    <h2>Step 1: Personal Information</h2>
+                                </ion-item-divider>
+                            </ion-col>
+                        </ion-row>
+
+
+                        <form onsubmit="navAllocations(event)">
+                            <ion-row>
+                                <ion-col>
+                                    <ion-item>
+                                        <ion-label position="stacked">Name</ion-label>
+                                        <ion-input id="name" type="text" placeholder="John Doe" autocorrect="off" required="true"></ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+                            <ion-row>
+                                <ion-col>
+                                    <ion-item>
+                                        <ion-label position="stacked">E-Mail</ion-label>
+                                        <ion-input id="email" type="email" placeholder="john.doe@example.com" autocorrect="off" required="true"></ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+                            <ion-row>
+                                <ion-col>
+                                    <ion-item>
+                                        <ion-label position="stacked">Donation</ion-label>
+                                        <ion-input id="donationAmount" class="currency" type="number" placeholder="250" autocorrect="off" required="true"></ion-input>
+                                    </ion-item>
+                                </ion-col>
+                            </ion-row>
+
+
+                            <ion-row>
+                                <ion-col>
+                                    <ion-item-divider>
+                                        <h2>Step 2: Choose Strategy(ies)</h2>
+                                    </ion-item-divider>
+                                </ion-col>
+                            </ion-row>
+
                             <ion-row>
                                 <ion-col>
                                     <ion-item>
                                         <ion-label>
-                                            <h2>Co-governance</h2>
+                                            <h2 class="strategy-name">Co-governance</h2>
                                             <ion-note class="ion-text-wrap">
                                                 Ensuring communities have what they need to lead on the issues that matter to people's lives 
                                                 year-round &mdash; from engaging voters in elections to building power to pass bold policies
@@ -164,10 +250,11 @@
                                         <ion-checkbox slot="start" name="strategy" id="cogovernance" checked></ion-checkbox>
                                     </ion-item>
                                 </ion-col>
+
                                 <ion-col>
                                     <ion-item>
                                         <ion-label>
-                                            <h2>Voter protection and education</h2>
+                                            <h2 class="strategy-name">Voter protection and education</h2>
                                             <ion-note class="ion-text-wrap">
                                                 Protecting voters and expanding access to the ballot to ensure that every person has a vote and
                                                 that each vote is counted in the face of the ongoing efforts to purge and suppress voters &mdash;
@@ -178,11 +265,12 @@
                                     </ion-item>
                                 </ion-col>
                             </ion-row>
+
                             <ion-row>
                                 <ion-col>
                                     <ion-item>
                                         <ion-label>
-                                            <h2>Narrative change</h2>
+                                            <h2 class="strategy-name">Narrative change</h2>
                                             <ion-note class="ion-text-wrap">
                                                 Building new narratives that are driven by the incredible leaders &mdash; most of them women and
                                                 people of color &mdash; leading state-based and national work across the country.
@@ -194,7 +282,7 @@
                                 <ion-col>
                                     <ion-item>
                                         <ion-label>
-                                            <h2>Sustainability</h2>
+                                            <h2 class="strategy-name">Sustainability</h2>
                                             <ion-note class="ion-text-wrap">
                                                 Acknowledging the unseen burdens of power building and allowing organizations to operate from a
                                                 position of safety and strength.
@@ -204,96 +292,68 @@
                                     </ion-item>
                                 </ion-col>
                             </ion-row>
-                        </ion-grid>
 
-                        <ion-list id="statesSelectList">
-                            <ion-item-divider color="Tertiary">
-                                <h2>Choose Your States</h2>
-                            </ion-item-divider>
-                            <ion-item>
-                                <ion-label>National</ion-label>
-                                <ion-checkbox name="state" slot="start" value="ntl"></ion-checkbox>
-                            </ion-item>
-                            <ion-item>
-                                <ion-label>Arizona</ion-label>
-                                <ion-checkbox checked slot="start" name="state" value="az"></ion-checkbox>
-                            </ion-item>
-                            <ion-item>
-                                <ion-label>Colorado</ion-label>
-                                <ion-checkbox slot="start" name="state" value="co"></ion-checkbox>
-                            </ion-item>
-                            <ion-item>
-                                <ion-label>Florida</ion-label>
-                                <ion-checkbox slot="start" name="state" value="fl"></ion-checkbox>
-                            </ion-item>
-                            <ion-item>
-                                <ion-label>Georgia</ion-label>
-                                <ion-checkbox slot="start" name="state" value="ga"></ion-checkbox>
-                            </ion-item>
-                            <ion-item>
-                                <ion-label>Michigan</ion-label>
-                                <ion-checkbox slot="start" name="state" value="mi"></ion-checkbox>
-                            </ion-item>
-                            <ion-item>
-                                <ion-label>Minnesota</ion-label>
-                                <ion-checkbox slot="start" name="state" value="mn"></ion-checkbox>
-                            </ion-item>
-                            <ion-item>
-                                <ion-label>North Carolina</ion-label>
-                                <ion-checkbox slot="start" name="state" value="nc"></ion-checkbox>
-                            </ion-item>
-                            <ion-item>
-                                <ion-label>Nevada</ion-label>
-                                <ion-checkbox slot="start" name="state" value="nv"></ion-checkbox>
-                            </ion-item>
-                            <ion-item>
-                                <ion-label>Pennsylvania</ion-label>
-                                <ion-checkbox slot="start" name="state" value="pa"></ion-checkbox>
-                            </ion-item>
-                            <ion-item>
-                                <ion-label>Texas</ion-label>
-                                <ion-checkbox slot="start" name="state" value="tx"></ion-checkbox>
-                            </ion-item>
-                            <ion-item>
-                                <ion-label>Virginia</ion-label>
-                                <ion-checkbox slot="start" name="state" value="va"></ion-checkbox>
-                            </ion-item>
-                        </ion-list>
 
-                        <ion-button type="submit" size="large" id="continuebtn">Continue</ion-button>
-                    </form>
-                </ion-content>
-            </ion-tab>
-            <ion-tab tab="gaps">
-                <ion-header translucent>
-                    <ion-toolbar color="primary">
-                    <ion-title><h1>Donation Gaps</h1></ion-title>
-                    </ion-toolbar>
-                </ion-header>
-                <ion-content>
-                    <ion-grid fixed id="gapcontainer"></ion-grid>
-                    <ion-button size="large" id="continuebtn" onclick="navAllocations(event)">Continue</ion-button>
+                            <ion-row>
+                                <ion-col>
+                                    <ion-item-divider>
+                                        <h2>Step 3: Choose State(s)</h2>
+                                    </ion-item-divider>
+                                </ion-col>
+                            </ion-row>
+
+
+                            <ion-row id="state-container-row">
+                                <ion-grid id="state-container">
+                                    <ion-row>
+                                        <ion-col>
+                                            <ion-avatar slot="start">
+                                                <ion-skeleton-text animated></ion-skeleton-text>
+                                            </ion-avatar>
+                                            <ion-label>
+                                                <h3>
+                                                    <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+                                                </h3>
+                                                <p>
+                                                    <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+                                                </p>
+                                                <p>
+                                                    <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+                                                </p>
+                                            </ion-label>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-grid>
+                            </ion-row>
+
+                            <ion-row>
+                                <ion-col>
+                                    <ion-button type="submit" size="large" id="continuebtn">Continue</ion-button>
+                                </ion-col>
+                            </ion-row>
+                        </form>
+                    </ion-grid>
                 </ion-content>
             </ion-tab>
             <ion-tab tab="allocations">
-                <ion-header translucent>
-                    <ion-toolbar color="primary">
-                    <ion-title><h1>Allocations</h1></ion-title>
-                    </ion-toolbar>
-                </ion-header>
-                <ion-content>
-                    <h1>Adjust Donations</h1>
-                    <ion-list id="allocationsContainer"></ion-list>
+                <ion-content class="ion-justify-content-center">
+                    <ion-grid fixed id="info-main-grid">
+                        <ion-row>
+                            <ion-col>
+                                <ion-text>
+                                    <h1>
+                                        Adjust Donations
+                                    </h1>
+                                </ion-text>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
                 </ion-content>
             </ion-tab>
             <ion-tab-bar slot="bottom">
             <ion-tab-button tab="info">
               <ion-label>Info</ion-label>
               <ion-icon name="person-outline"></ion-icon>
-            </ion-tab-button>
-            <ion-tab-button tab="gaps">
-              <ion-label>Donation Gaps</ion-label>
-              <ion-icon name="bar-chart-outline"></ion-icon>
             </ion-tab-button>
             <ion-tab-button tab="allocations">
               <ion-label>Allocations</ion-label>

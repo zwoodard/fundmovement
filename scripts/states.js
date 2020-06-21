@@ -1,12 +1,13 @@
-var stateGaps = (function(){
+var states = (function(){
     var csvUrl = "data/state_gap_data.csv";
     var gapData = []
-    var loadData = function() {
+    var load = function() {
         if(gapData.length == 0) {
             Papa.parse(csvUrl, {
                 download: true,
                 header: true,
                 complete: function(data) {
+                    //Set data
                     gapData = data.data.map(function(e) {
                         var parsedData = {}
                         parsedData.state = e.State;
@@ -19,8 +20,21 @@ var stateGaps = (function(){
 
                         return parsedData;
                     });
+
+                    //Draw with new data
+                    draw();
                 }
             });
+        }
+    }
+
+    var draw = function() {
+
+        var stateContainer = document.getElementById("state-container");
+        stateContainer.innerHTML = "";
+
+        for(var i = 0; i < gapData.length; i++) {
+            drawState(stateContainer, gapData[i]);
         }
     }
 
@@ -31,30 +45,34 @@ var stateGaps = (function(){
         minimumFractionDigits: 0
 
     });
-    var addProgressBar = function(data) {
-        var stateProgressId = "stategap_" + data.state;
-        var stateProgressRow = document.getElementById(stateProgressId);
+    var drawState = function(containerEl, data) {
+        var stateRowId = "state-" + data.state;
+        var stateRow = document.getElementById(stateRowId);
         //Create state div + progress bar if not exists
-        if(!stateProgressRow) {
-            var stateProgressColId = stateProgressId + "_col";
-            stateProgressRow = document.createElement("ion-row");
+        if(!stateRow) {
+            stateRow = document.createElement("ion-row");
             // stateProgressRow.setAttribute("state", data.state);
-            stateProgressRow.setAttribute("id", stateProgressId);
-            stateProgressRow.innerHTML = `
-            <ion-col id="${stateProgressColId}">
-            <ion-text><h2>${data.state}<h2></ion-text>
-            </ion-col>
+            stateRow.setAttribute("id", stateRowId);
+            stateRow.innerHTML = `
+                <ion-col size="4">
+                    <ion-item>
+                        <ion-label>${data.state}</ion-label>
+                        <ion-checkbox checked slot="start" name="state" value="${data.state}"></ion-checkbox>
+                    </ion-item>
+                </ion-col>
             `;
 
-            document.getElementById("gapcontainer").appendChild(stateProgressRow);
+            var progressCol = document.createElement("ion-col");
+            progressCol.setAttribute("size", "8");
 
-            var startColor = '#FC5B3F';
+            
+            var startColor = getComputedStyle(document.documentElement).getPropertyValue('--ion-color-primary');
+            console.log(startColor);
             var endColor = '#6FD57F';
-            var line = new ProgressBar.Line("#" + stateProgressColId, {
-                color: startColor,
-                strokeWidth: 1.5,
+            var line = new ProgressBar.Line(progressCol, {
+                color: 'var(--ion-color-primary)',
+                strokeWidth: 4,
                 trailColor: '#eee',
-                trailWidth: 0.8,
                 duration: 500,
                 easing: 'easeOut',
                 text: {
@@ -66,34 +84,20 @@ var stateGaps = (function(){
                             ${currencyFormatter.format(data.gap)}
                         </ion-text>
                     `,
-                    className: 'statename',
                     style: {
-                        color: '#f00'
+                        color: '#FFF'
                     },
                 },
-                step: function(state, line, attachment) {
-                    line.path.setAttribute('stroke', state.color);
-                },
             });
-            line.animate(data.raisedPercent, {
-                from: {
-                    color: startColor
-                },
-                to: {
-                    color: endColor
-                }
-            });
-        }
-    }
+            line.animate(data.raisedPercent);
 
-    var draw = function() {
-        for(var i = 0; i < gapData.length; i++) {
-            addProgressBar(gapData[i]);
+            stateRow.appendChild(progressCol);
+            containerEl.appendChild(stateRow);
         }
     }
 
     return {
-        loadData: loadData,
-        draw: draw
+        load: load,
+        draw: draw,
     }
 })();
