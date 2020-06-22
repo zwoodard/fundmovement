@@ -1,19 +1,21 @@
 var states = (function(){
     var csvUrl = "data/state_gap_data.csv";
     var gapData = []
-    var load = function() {
+    var load = function(callback) {
         if(gapData.length == 0) {
             Papa.parse(csvUrl, {
                 download: true,
                 header: true,
                 complete: function(data) {
-                    //Set data
+                    //First pass: parse data, calculate total weight
+                    var totalWeight = 0.0;
                     gapData = data.data.map(function(e) {
                         var parsedData = {}
                         parsedData.state = e.State;
                         parsedData.budget = Number(e["Current c3 budget"].replace(/[^0-9.-]+/g,""));
                         parsedData.gap = Number(e["Overal 2020 c3 budget gap"].replace(/[^0-9.-]+/g,""));
                         parsedData.weight = Number(e["Priority for Weighting"]);
+                        totalWeight += parsedData.weight;
 
                         parsedData.raised = parsedData.budget - parsedData.gap;
                         parsedData.raisedPercent = parsedData.raised / parsedData.budget;
@@ -21,8 +23,14 @@ var states = (function(){
                         return parsedData;
                     });
 
-                    //Draw with new data
-                    draw();
+                    //Second pass: set fractional share based on total weight
+                    for(var state in gapData) {
+                        state.fractionalShare = state.weight / totalWeight;
+                    }
+
+                    //Run callback
+                    if(callback)
+                        callback();
                 }
             });
         }
@@ -57,7 +65,7 @@ var states = (function(){
                 <ion-col size="4">
                     <ion-item>
                         <ion-label>${data.state}</ion-label>
-                        <ion-checkbox checked slot="start" name="state" value="${data.state}"></ion-checkbox>
+                        <ion-checkbox slot="start" name="state" value="${data.state}"></ion-checkbox>
                     </ion-item>
                 </ion-col>
             `;
@@ -67,7 +75,6 @@ var states = (function(){
 
             
             var startColor = getComputedStyle(document.documentElement).getPropertyValue('--ion-color-primary');
-            console.log(startColor);
             var endColor = '#6FD57F';
             var line = new ProgressBar.Line(progressCol, {
                 color: 'var(--ion-color-primary)',

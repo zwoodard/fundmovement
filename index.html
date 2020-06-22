@@ -14,18 +14,17 @@
 <script>
     (function () {
         window.onload = function() {
-            states.load();
-            allocations.loadData();
+            //Load and draw state data since it's on the main page
+            states.load(states.draw);
+
+            //Loads, but does not draw allocations data
+            allocations.load();
 
             var currentTab;
             document.getElementById("tabs-main").addEventListener("ionTabsDidChange", function(e) {
                 currentTab = e.detail.tab;
-                if (e.detail.tab == "gaps")
-                {
-                    states.draw();
-                }
-                else if (e.detail.tab == "allocations") {
-                    allocations.draw();
+                if (e.detail.tab == "allocations") {
+                    allocations.redraw();
                 }
             });
 
@@ -68,6 +67,9 @@
                 allocations.redraw();
             });
 
+            document.querySelector("#info-main-grid form")
+                .addEventListener("ionChange", (e) => evaluateNav());
+
         };
     })();
 
@@ -79,7 +81,31 @@
         document.body.appendChild(alert);
         return alert.present();
     }
-    
+
+    function setAllowAllocationsNav(enabled) {
+        if(enabled) {
+            document.querySelector("ion-tab-button[tab='allocations']").removeAttribute("disabled");
+            document.getElementById("continuebtn").removeAttribute("disabled");
+        }
+        else {
+            document.querySelector("ion-tab-button[tab='allocations']").setAttribute("disabled", "true");
+            document.getElementById("continuebtn").setAttribute("disabled", "true");
+        }
+    }
+
+    function evaluateNav() {
+        var hasName = !!document.getElementById("name").value;
+        var hasEmail = !!document.getElementById("email").value;
+        var hasAmount = !!document.getElementById("donationAmount").value;
+
+        var hasCheckedState = Array.from(document.getElementsByName("state")).some(e => e.checked);
+        var hasCheckedStrategy = Array.from(document.getElementsByName("strategy")).some(e => e.checked);
+
+        var enableNav = hasName && hasEmail && hasAmount && hasCheckedState && hasCheckedStrategy;
+
+        setAllowAllocationsNav(enableNav);
+    }
+
     function navAllocations(e) {
         e.preventDefault();
         var tabs = document.getElementById("tabs-main");
@@ -247,7 +273,7 @@
                                                 once elected officials are in office.
                                             </ion-note>
                                         </ion-label>
-                                        <ion-checkbox slot="start" name="strategy" id="cogovernance" checked></ion-checkbox>
+                                        <ion-checkbox slot="start" name="strategy" id="cogovernance"></ion-checkbox>
                                     </ion-item>
                                 </ion-col>
 
@@ -261,7 +287,7 @@
                                                 especially those from low income communities and communities of color.
                                             </ion-note>
                                         </ion-label>
-                                        <ion-checkbox slot="start" name="strategy" id="voterprotectionandeducation" checked></ion-checkbox>
+                                        <ion-checkbox slot="start" name="strategy" id="voterprotectionandeducation"></ion-checkbox>
                                     </ion-item>
                                 </ion-col>
                             </ion-row>
@@ -276,7 +302,7 @@
                                                 people of color &mdash; leading state-based and national work across the country.
                                             </ion-note>
                                         </ion-label>
-                                        <ion-checkbox slot="start" name="strategy" id="narrativechange" checked></ion-checkbox>
+                                        <ion-checkbox slot="start" name="strategy" id="narrativechange"></ion-checkbox>
                                     </ion-item>
                                 </ion-col>
                                 <ion-col>
@@ -288,7 +314,7 @@
                                                 position of safety and strength.
                                             </ion-note>
                                         </ion-label>
-                                        <ion-checkbox slot="start" name="strategy" id="sustainability" checked></ion-checkbox>
+                                        <ion-checkbox slot="start" name="strategy" id="sustainability"></ion-checkbox>
                                     </ion-item>
                                 </ion-col>
                             </ion-row>
@@ -328,7 +354,7 @@
 
                             <ion-row>
                                 <ion-col>
-                                    <ion-button type="submit" size="large" id="continuebtn">Continue</ion-button>
+                                    <ion-button disabled type="submit" size="large" id="continuebtn">Continue</ion-button>
                                 </ion-col>
                             </ion-row>
                         </form>
@@ -337,7 +363,7 @@
             </ion-tab>
             <ion-tab tab="allocations">
                 <ion-content class="ion-justify-content-center">
-                    <ion-grid fixed id="info-main-grid">
+                    <ion-grid fixed id="allocations-main-grid">
                         <ion-row>
                             <ion-col>
                                 <ion-text>
@@ -347,6 +373,8 @@
                                 </ion-text>
                             </ion-col>
                         </ion-row>
+
+                        <div id="allocations-container"></div>
                     </ion-grid>
                 </ion-content>
             </ion-tab>
@@ -355,7 +383,7 @@
               <ion-label>Info</ion-label>
               <ion-icon name="person-outline"></ion-icon>
             </ion-tab-button>
-            <ion-tab-button tab="allocations">
+            <ion-tab-button disabled tab="allocations">
               <ion-label>Allocations</ion-label>
               <ion-icon name="options-outline"></ion-icon>
             </ion-tab-button>
