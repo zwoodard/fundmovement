@@ -23,10 +23,24 @@ var states = (function(){
                         return parsedData;
                     });
 
-                    //Second pass: set fractional share based on total weight
-                    for(var state in gapData) {
-                        state.fractionalShare = state.weight / totalWeight;
-                    }
+
+                    var totalFractionalShare = 0.0;
+                    gapData.map((state, index, arr) => {
+                        if(index == arr.length - 1) {
+                            //Last state of, up until now rounding may make the slices off by ~1%
+                            //Makes sure this final state's fractional share makes the total 100%
+                            state.fractionalShare = 1.0 - totalFractionalShare;
+                        }
+                        else {
+                            var exactFractionalShare = state.weight / totalWeight;
+                            var roundedFractionalShare = Math.round(exactFractionalShare * 100) / 100.0;
+        
+                            state.fractionalShare = roundedFractionalShare;
+                            totalFractionalShare += roundedFractionalShare;
+                        }
+        
+                        console.log(`${state.weight} / ${totalWeight} = ${state.fractionalShare}`);
+                    });
 
                     //Run callback
                     if(callback)
